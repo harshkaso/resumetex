@@ -15,7 +15,7 @@
 
 <div align="center">
 
-[<kbd><br> Edit Resume on Overleaf </br></kbd>](https://www.overleaf.com/docs?snip_uri=https://github.com/harshkaso/resumetex/archive/refs/heads/main.zip)
+[<button type="button" style="background: forestgreen; color: white; padding: 1em; border-radius: 8px; cursor: pointer">Edit Resume on Overleaf</button>](https://www.overleaf.com/docs?snip_uri=https://github.com/harshkaso/resumetex/archive/refs/heads/main.zip&snip_name=ResumeTex)
 
 </div>
 
