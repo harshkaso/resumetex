@@ -39,12 +39,19 @@
     \newcommand{\ProfessionalSummary}{#1}
 }
 
-\NewDocumentCommand{\SetSkills}{m} {
-    \newcommand{\Skills}{#1}
+\makeatletter
+% ADD SKILL TO THE LIST
+% ARGS:
+% 1 SKILL CATEGORY
+% 2 SKILLS {comma separated list of skills: skill1, skill2, skill3 ... }
+\newcommand{\SkillList}{}
+\NewDocumentCommand{\AddSkill}{ m m }{
+    \g@addto@macro\SkillList{
+        #1 & #2 \\
+    }
 }
 
-\makeatletter
-% ADD ONE EXPERIENCE TO THE LIST
+% ADD EXPERIENCE TO THE LIST
 % ARGS:
 % 1 JOB POSITION
 % 2 COMPANY NAME
@@ -63,7 +70,7 @@
     }
 }
 
-% ADD ONE PROJECT TO THE LIST
+% ADD PROJECT TO THE LIST
 % ARGS:
 % 1 PROJECT NAME
 % 2 START DATE
@@ -81,7 +88,7 @@
     }
 }
 
-% ADD ONE EDUCATION TO THE LIST
+% ADD EDUCATION TO THE LIST
 % ARGS:
 % 1 DEGREE
 % 2 UNIVERSITY/SCHOOL
@@ -130,7 +137,7 @@
 \NewDocumentCommand{\PrintSkills}{}{
     \begin{rSection}{Skills}
     \begin{tabular}{ @{} >{\bfseries}l @{\hspace{3ex}} l }
-        \Skills
+        \SkillList
     \end{tabular}
     \end{rSection}
 }
@@ -169,12 +176,22 @@
 \textbf{Software Engineer} specializing in building whimsical digital contraptions, taming rebellious code goblins, and teaching computers how to stop making suspicious decisions. Designed a \textbf{98\%+ accurate snack-detection oracle} that helped \textbf{75+ kitchen robots} distinguish cookies from suspiciously cookie-shaped rocks. Created a React Native–inspired \textbf{mobile wizard portal} used by \textbf{1,000+ imaginary villagers} to complete quests, submit requests, and occasionally press buttons just to see what happens.
 }
 
+% --------------------------------------------------------------------------------
+% Skill entries: 
+% Args:
+% 1) Skill Category
+% 2) Skills (comma separated list of skills: skill1, skill2, skill3 ... )
+% --------------------------------------------------------------------------------
+\AddSkill 
+    {Code Sorcery}
+    {Python Potions, JavaScript Juggling, TypeScript Tricks, API Alchemy}
+\AddSkill
+    {AI Mischief Management}
+    {ML Magic, Prompt Puppetry, Model Whispering, Data Divination}
+\AddSkill
+    {Engineering Gadgets}
+    {Database Gardening, Cloud Cloudlets, Bug Hunting, Spreadsheet Sorcery}
 
-\SetSkills{
-Code Sorcery & Python Potions, JavaScript Juggling, TypeScript Tricks, API Alchemy \\
-AI Mischief Management & ML Magic, Prompt Puppetry, Model Whispering, Data Divination \\
-Engineering Gadgets & Database Gardening, Cloud Cloudlets, Bug Hunting, Spreadsheet Sorcery \\
-}
 % --------------------------------------------------------------------------------
 % Experience entries:
 % Args:
