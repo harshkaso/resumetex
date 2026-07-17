@@ -1,0 +1,287 @@
+% --------------------------------------------------------------------------------
+% RESUMETEX
+% AUTHOR: HARSH KASODARIYA
+% LICENSE: MIT              
+% --------------------------------------------------------------------------------
+\documentclass[11pt, letterpaper]{article}
+% COMMANDS WITH FLEXIBLE ARGUMENTS
+\usepackage{xparse}
+% CUSTOM ENUMERATE/ITEMIZE LIST
+\usepackage{enumitem}
+% NO PAR(AGRAPH) INDENTATION
+\usepackage[parfill]{parskip}
+% CUSTOM DOCUMENT MARGINS
+\usepackage[left=0.5in,top=0.5in,right=0.5in,bottom=0.5in]{geometry}
+% FONT - CHARTER
+\usepackage{charter}
+% COLORED LINKS
+\usepackage[colorlinks = true, linkcolor = blue, urlcolor  = blue, citecolor = blue, anchorcolor = blue]{hyperref}
+% CUSTOMIZE TABULAR
+\usepackage{tabularx}
+% MACHINE-READABLE PDF
+\input{glyphtounicode} 
+\pdfgentounicode=1
+% NO PAGE NUMBERS
+\pagestyle{empty}
+% --------------------------------------------------------------------------------
+% COMMANDS
+% --------------------------------------------------------------------------------
+% CONTACT INFO
+\NewDocumentCommand{\SetContact}{ m m m m }{
+  \newcommand{\ContactName}{#1}
+  \newcommand{\ContactEmail}{#2}
+  \newcommand{\ContactPhone}{#3}
+  \newcommand{\ContactAddress}{#4}
+}
+
+% PROFESSIONAL SUMMARY
+\NewDocumentCommand{\SetProfessionalSummary}{m}{
+    \newcommand{\ProfessionalSummary}{#1}
+}
+
+\NewDocumentCommand{\SetSkills}{m} {
+    \newcommand{\Skills}{#1}
+}
+
+\makeatletter
+% ADD ONE EXPERIENCE TO THE LIST
+% ARGS:
+% 1 JOB POSITION
+% 2 COMPANY NAME
+% 3 COMPANY LOCATION
+% 4 START DATE
+% 5 END DATE
+% 6 ACCOMPLISHMENTS {write as: \item ... \item ... }
+\newcommand{\ExperienceList}{}
+\NewDocumentCommand{\AddExperience}{ m m m m m +m }{
+    \g@addto@macro\ExperienceList{
+        \textbf{#1}, #2, #3 \hfill \textit{#4 - #5}\\
+        \vspace{-7mm}
+        \begin{itemize}[leftmargin=*,noitemsep, nolistsep]
+            #6
+        \end{itemize}
+    }
+}
+
+% ADD ONE PROJECT TO THE LIST
+% ARGS:
+% 1 PROJECT NAME
+% 2 START DATE
+% 3 END DATE
+% 4 ACCOMPLISHMENTS {write as: \item ... \item ... }
+% 5 COMPANY/PROJECT LINK [optional]
+\newcommand{\ProjectList}{}
+\NewDocumentCommand{\AddProject}{ m m m +m o }{
+    \g@addto@macro\ProjectList{
+        \textbf{#1}\IfNoValueTF{#5}{}{, #5} \hfill \textit{#2 - #3}\\
+        \vspace{-7mm}
+        \begin{itemize}[leftmargin=*,noitemsep, nolistsep]
+            #4
+        \end{itemize}
+    }
+}
+
+% ADD ONE EDUCATION TO THE LIST
+% ARGS:
+% 1 DEGREE
+% 2 UNIVERSITY/SCHOOL
+% 3 UNIVERISTY LOCATION
+% 4 START DATE
+% 5 END DATE
+\newcommand{\EducationList}{}
+\NewDocumentCommand{\AddEducation}{ m m m m m }{
+    \g@addto@macro\EducationList{
+        \textbf{#1}, #2, #3 \hfill \textit{#4 - #5}\\
+    }
+}
+\makeatother
+
+% DEFINE RESUME SECTION
+\newenvironment{rSection}[1]{
+  \textsc{\large #1} % Section title in small caps
+  \medskip
+  \hrule
+  \begin{list}{}{ % List for each individual item in the section
+    \setlength{\leftmargin}{0em} % Margin within the section
+  }
+  \item[]
+}{
+  \end{list}
+}
+% --------------------------------------------------------------------------------
+% PRINT COMMANDS
+% --------------------------------------------------------------------------------
+% PRINT CONTACT INFO
+\NewDocumentCommand{\PrintContact}{}{
+    \def\DiamondSep{\quad$\diamond$\quad}
+    \centerline{\huge\textbf{\MakeUppercase{\ContactName}}}
+    \vspace{1mm}
+    \centerline{\ContactEmail\DiamondSep\ContactPhone\DiamondSep\ContactAddress}
+}
+
+% PRINT PROFESSIONAL SUMMARY
+\NewDocumentCommand{\PrintSummary}{}{
+    \begin{rSection}{Summary}
+        \ProfessionalSummary
+    \end{rSection}
+}
+
+% PRINT SKILLS
+\NewDocumentCommand{\PrintSkills}{}{
+    \begin{rSection}{Skills}
+    \begin{tabular}{ @{} >{\bfseries}l @{\hspace{3ex}} l }
+        \Skills
+    \end{tabular}
+    \end{rSection}
+}
+
+% PRINT EXPERIENCES
+\NewDocumentCommand{\PrintExperiences}{}{
+    \begin{rSection}{Experience}
+        \ExperienceList
+    \end{rSection}
+}
+
+% PRINT PROJECTS
+\NewDocumentCommand{\PrintProjects}{}{
+    \begin{rSection}{Projects}
+        \ProjectList
+    \end{rSection}
+}
+
+% PRINT EDUCATION
+\NewDocumentCommand{\PrintEducation}{}{
+    \begin{rSection}{Education}
+        \EducationList
+    \end{rSection}
+}
+
+% --------------------------------------------------------------------------------
+% DATA - THIS IS WHERE YOU PROVIDE ALL YOUR DATA
+% --------------------------------------------------------------------------------
+\SetContact
+    {Dr. Waffle Bytewhistle}
+    {\href{mailto: waffle.bytewhistle@example.com}{waffle.bytewhistle@example.com}}
+    {(+1) 555-123-COOKIE}
+    {Pancake Harbor, Moonland}
+
+\SetProfessionalSummary{
+\textbf{Software Engineer} specializing in building whimsical digital contraptions, taming rebellious code goblins, and teaching computers how to stop making suspicious decisions. Designed a \textbf{98\%+ accurate snack-detection oracle} that helped \textbf{75+ kitchen robots} distinguish cookies from suspiciously cookie-shaped rocks. Created a React Native–inspired \textbf{mobile wizard portal} used by \textbf{1,000+ imaginary villagers} to complete quests, submit requests, and occasionally press buttons just to see what happens.
+}
+
+
+\SetSkills{
+Code Sorcery & Python Potions, JavaScript Juggling, TypeScript Tricks, API Alchemy \\
+AI Mischief Management & ML Magic, Prompt Puppetry, Model Whispering, Data Divination \\
+Engineering Gadgets & Database Gardening, Cloud Cloudlets, Bug Hunting, Spreadsheet Sorcery \\
+}
+% --------------------------------------------------------------------------------
+% Experience entries:
+% Args:
+% 1) Job position
+% 2) Company name
+% 3) Company location
+% 4) Start date
+% 5) End date
+% 6) Accomplishments (use \item)
+% --------------------------------------------------------------------------------
+\AddExperience
+    {Automation Wizard Apprentice}
+    {Bureau of Tiny Miracles}
+    {Pixel Grove}
+    {Sep 2023}
+    {Dec 2025}
+    {\item[--] Automated repetitive tasks so employees could spend more time solving important problems and fewer time arguing with spreadsheets.
+    \item[--] Created reliable data pipelines that carried information safely across the kingdom without losing important socks.
+    \item[--] Added monitoring charms that alerted teams before small problems evolved into legendary disasters.}
+
+\AddExperience
+    {Software Spell Engineer}
+    {The Department of Suspicious Buttons}
+    {Cookie Cove}
+    {Jul 2022}
+    {Aug 2023}
+    {\item[--] Developed reusable software spells that prevented common bugs from escaping into the wild.
+    \item[--] Improved error handling so crashed applications could explain themselves instead of dramatically fainting.
+    \item[--] Maintained magical documentation scrolls that helped future engineers avoid ancient coding curses.}
+
+\AddExperience
+    {Senior Bug Wrangler}
+    {The Department of Suspicious Buttons}
+    {Cookie Cove}
+    {Jan 2021}
+    {Jun 2022}
+    {\item[--] Built backend machinery that transformed confusing button presses into predictable and delightful outcomes.
+    \item[--] Designed automated workflows that politely escorted tasks from “where did this come from?” to “everything is handled.”
+    \item[--] Created internal tools that reduced paperwork dragons and improved team productivity across the department.}
+
+% --------------------------------------------------------------------------------
+% Project entries:
+% Args:
+% 1) Project name
+% 2) Start date
+% 3) End date
+% 4) Accomplishments (use \item)
+% 5) Optional link in []
+% --------------------------------------------------------------------------------
+\AddProject
+    {Explain-O-Matic 3000}
+    {Feb 2024}
+    {Nov 2024}
+    {\item[--] Built a friendly explanation machine that translated mysterious computer guesses into understandable stories.
+    \item[--] Designed evaluation tools to measure when the machine was clever versus confidently confused.
+    \item[--] Improved response speed so explanations arrived before users could finish saying “why though?”}
+    [\href{https://example.com/explainomatic}{Project Link}]
+
+\AddProject
+    {QuestFlow (The Task Dragon)}
+    {Jun 2023}
+    {Oct 2023}
+    {\item[--] Created an automation dragon that moved requests between departments without losing important details.
+    \item[--] Built activity logs that recorded every dragon adventure for future historians.
+    \item[--] Added safety checks preventing the dragon from accidentally organizing chaos.}
+    [\href{https://example.com/questflow}{Project Link}]
+
+\AddProject
+    {CookieVision (The Biscuit Oracle)}
+    {Jan 2022}
+    {May 2022}
+    {\item[--] Developed a vision system capable of identifying cookies, cupcakes, and suspicious snack impostors.
+    \item[--] Added explanation features so the oracle could defend its snack-related opinions.
+    \item[--] Optimized predictions so hungry villagers received answers before snack emergencies occurred.}
+    [\href{https://example.com/cookievision}{Project Link}]
+
+% --------------------------------------------------------------------------------
+% Education entries:
+% Args:
+% 1) Degree
+% 2) University/School
+% 3) Location (N/A)
+% 4) Start date
+% 5) End date
+% --------------------------------------------------------------------------------
+\AddEducation
+    {Master of Digital Wizardry}
+    {University of Tiny Computers}
+    {Pixel Plains}
+    {Sep 2019}
+    {Jun 2021}
+\AddEducation
+    {Bachelor of Button Engineering}
+    {Academy of Mechanical Giggles}
+    {Whistlewood}
+    {Sep 2015}
+    {Jun 2019}
+
+% --------------------------------------------------------------------------------
+% LAYOUT - REORDER PRINT COMMANDS TO CHANGE THE ORDER OF SECTIONS ON RESUME
+% --------------------------------------------------------------------------------
+\begin{document}
+\PrintContact
+\PrintSummary
+\PrintSkills
+\PrintExperiences
+\PrintProjects
+\PrintEducation
+\end{document}
+
