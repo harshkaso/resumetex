@@ -15,7 +15,7 @@
 
 <div align="center">
 
-[![Edit Resume on Overleaf](edit-resume.png)](https://www.overleaf.com/docs?snip_uri=https://github.com/harshkaso/resumetex/archive/refs/heads/main.zip&snip_name=ResumeTex)
+[![Edit Resume on Overleaf](edit-resume.svg)](https://www.overleaf.com/docs?snip_uri=https://github.com/harshkaso/resumetex/archive/refs/heads/main.zip&snip_name=ResumeTex)
 
 </div>
 
