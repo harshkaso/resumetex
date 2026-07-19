@@ -95,10 +95,12 @@
 % 3 UNIVERISTY LOCATION
 % 4 START DATE
 % 5 END DATE
+% 6 COURSEWORK [optional]
 \newcommand{\EducationList}{}
-\NewDocumentCommand{\AddEducation}{ m m m m m }{
+\NewDocumentCommand{\AddEducation}{ m m m m m o }{
     \g@addto@macro\EducationList{
         \textbf{#1}, #2, #3 \hfill \textit{#4 - #5}\\
+        \IfNoValueTF{#6}{}{\textit{\textbf{Course Work} | #6\\}}
     }
 }
 \makeatother
@@ -173,7 +175,7 @@
     {Pancake Harbor, Moonland}
 
 \SetProfessionalSummary{
-\textbf{Software Engineer} specializing in building whimsical digital contraptions, taming rebellious code goblins, and teaching computers how to stop making suspicious decisions. Designed a \textbf{98\%+ accurate snack-detection oracle} that helped \textbf{75+ kitchen robots} distinguish cookies from suspiciously cookie-shaped rocks. Created a React Native–inspired \textbf{mobile wizard portal} used by \textbf{1,000+ imaginary villagers} to complete quests, submit requests, and occasionally press buttons just to see what happens.
+\textbf{Software Engineer} specializing in building whimsical digital contraptions and taming rebellious code goblins. Designed a \textbf{98\%+ accurate snack-detection oracle} used by \textbf{75+ kitchen robots} to distinguish cookies from suspiciously cookie-shaped rocks. Created a \textbf{mobile wizard portal} used by \textbf{1,000+ imaginary villagers} to complete quests and submit requests.
 }
 
 % --------------------------------------------------------------------------------
@@ -239,7 +241,7 @@
 % 2) Start date
 % 3) End date
 % 4) Accomplishments (use \item)
-% 5) Optional link in []
+% 5) Additional information in [] {optional}
 % --------------------------------------------------------------------------------
 \AddProject
     {Explain-O-Matic 3000}
@@ -257,7 +259,7 @@
     {\item[--] Created an automation dragon that moved requests between departments without losing important details.
     \item[--] Built activity logs that recorded every dragon adventure for future historians.
     \item[--] Added safety checks preventing the dragon from accidentally organizing chaos.}
-    [\href{https://example.com/questflow}{Project Link}]
+    [\href{https://example.com/questflow}{Company Name}]
 
 \AddProject
     {CookieVision (The Biscuit Oracle)}
@@ -266,7 +268,6 @@
     {\item[--] Developed a vision system capable of identifying cookies, cupcakes, and suspicious snack impostors.
     \item[--] Added explanation features so the oracle could defend its snack-related opinions.
     \item[--] Optimized predictions so hungry villagers received answers before snack emergencies occurred.}
-    [\href{https://example.com/cookievision}{Project Link}]
 
 % --------------------------------------------------------------------------------
 % Education entries:
@@ -276,6 +277,7 @@
 % 3) Location (N/A)
 % 4) Start date
 % 5) End date
+% 6) Course Work in [] {optional}
 % --------------------------------------------------------------------------------
 \AddEducation
     {Master of Digital Wizardry}
@@ -283,6 +285,7 @@
     {Pixel Plains}
     {Sep 2019}
     {Jun 2021}
+    [Spell Algorithms, Quantum Debugging, AI Familiars, Rune Engineering, Vand Programming]
 \AddEducation
     {Bachelor of Button Engineering}
     {Academy of Mechanical Giggles}
