@@ -47,60 +47,84 @@
 \newcommand{\SkillList}{}
 \NewDocumentCommand{\AddSkill}{ m m }{
     \g@addto@macro\SkillList{
-        #1 & #2 \\
+        #1 & #2\\
     }
 }
-
 % ADD EXPERIENCE TO THE LIST
 % ARGS:
-% 1 JOB POSITION
-% 2 COMPANY NAME
-% 3 COMPANY LOCATION
-% 4 START DATE
-% 5 END DATE
-% 6 ACCOMPLISHMENTS {write as: \item ... \item ... }
-\newcommand{\ExperienceList}{}
-\NewDocumentCommand{\AddExperience}{ m m m m m +m }{
+% 1 PAGE BREAK [optional]
+% 2 JOB POSITION
+% 3 COMPANY NAME
+% 4 COMPANY LOCATION
+% 5 START DATE
+% 6 END DATE
+% 7 ACCOMPLISHMENTS
+\newcommand{\ExperienceList}{\empty}
+\NewDocumentCommand{\AddExperience}{s m m m m m +m}{
     \g@addto@macro\ExperienceList{
-        \textbf{#1}, #2, #3 \hfill \textit{#4 - #5}\\
+        \IfBooleanT{#1}{\newpage}
+        \textbf{#2}, #3, #4 \hfill \textbf{#5 - #6}\\
         \vspace{-7mm}
-        \begin{itemize}[leftmargin=*,noitemsep, nolistsep]
-            #6
+        \begin{itemize}[leftmargin=*,noitemsep,nolistsep]
+            #7
         \end{itemize}
     }
 }
+
 
 % ADD PROJECT TO THE LIST
 % ARGS:
-% 1 PROJECT NAME
-% 2 START DATE
-% 3 END DATE
-% 4 ACCOMPLISHMENTS {write as: \item ... \item ... }
-% 5 COMPANY/PROJECT LINK [optional]
+% 1 PAGE BREAK [optional]
+% 2 PROJECT NAME
+% 3 START DATE
+% 4 END DATE
+% 5 ACCOMPLISHMENTS
+% 6 ADDITIONAL INFO [optional]
 \newcommand{\ProjectList}{}
-\NewDocumentCommand{\AddProject}{ m m m +m o }{
+\NewDocumentCommand{\AddProject}{s m m m +m o}{
     \g@addto@macro\ProjectList{
-        \textbf{#1}\IfNoValueTF{#5}{}{, #5} \hfill \textit{#2 - #3}\\
+        \IfBooleanT{#1}{\newpage}
+        \textbf{#2}\IfNoValueTF{#6}{}{ | #6} \hfill \textbf{#3 - #4}\\
         \vspace{-7mm}
-        \begin{itemize}[leftmargin=*,noitemsep, nolistsep]
-            #4
+        \begin{itemize}[leftmargin=*,noitemsep,nolistsep]
+            #5
         \end{itemize}
     }
 }
 
+
 % ADD EDUCATION TO THE LIST
 % ARGS:
-% 1 DEGREE
-% 2 UNIVERSITY/SCHOOL
-% 3 UNIVERISTY LOCATION
-% 4 START DATE
-% 5 END DATE
-% 6 COURSEWORK [optional]
+% 1 PAGE BREAK [optional]
+% 2 DEGREE
+% 3 UNIVERSITY/SCHOOL
+% 4 UNIVERSITY LOCATION
+% 5 START DATE
+% 6 END DATE
+% 7 COURSE WORK [optional]
 \newcommand{\EducationList}{}
-\NewDocumentCommand{\AddEducation}{ m m m m m o }{
+\NewDocumentCommand{\AddEducation}{s m m m m m o}{
     \g@addto@macro\EducationList{
-        \textbf{#1}, #2, #3 \hfill \textit{#4 - #5}\\
-        \IfNoValueTF{#6}{}{\textit{\textbf{Course Work} | #6\\}}
+        \IfBooleanT{#1}{\newpage}
+        \textbf{#2}, #3, #4 \hfill \textbf{#5 - #6}\\
+        \IfNoValueTF{#7}{}{
+            --\hspace{0.5em}\textit{\textbf{Course Work} | #7}\\
+        }
+    }
+}
+
+
+% ADD CERTIFICATION TO THE LIST
+% ARGS:
+% 1 PAGE BREAK [optional]
+% 2 CERTIFICATION NAME
+% 3 HOST ORGANISATION
+% 4 DATE EARNED
+\newcommand{\CertificationList}{}
+\NewDocumentCommand{\AddCertification}{s m m m}{
+    \g@addto@macro\CertificationList{
+        \IfBooleanT{#1}{\newpage}
+        \textbf{#2} | \textit{#3} \hfill \textbf{#4}\\
     }
 }
 \makeatother
@@ -159,9 +183,25 @@
 }
 
 % PRINT EDUCATION
+% \NewDocumentCommand{\PrintEducation}{}{
+%     \begin{rSection}{Education}
+%         \EducationList
+%     \end{rSection}
+% }
 \NewDocumentCommand{\PrintEducation}{}{
     \begin{rSection}{Education}
-        \EducationList
+        \begin{tabular}{@{}p{\textwidth}@{}}
+            \EducationList
+        \end{tabular}
+    \end{rSection}
+}
+
+% PRINT CERTIFICATIONS
+\NewDocumentCommand{\PrintCertifications}{} {
+    \begin{rSection}{Certifications}
+        \begin{tabular}{@{}p{\textwidth}@{}}
+            \CertificationList
+        \end{tabular}
     \end{rSection}
 }
 
@@ -259,15 +299,7 @@
     {\item[--] Created an automation dragon that moved requests between departments without losing important details.
     \item[--] Built activity logs that recorded every dragon adventure for future historians.
     \item[--] Added safety checks preventing the dragon from accidentally organizing chaos.}
-    [\href{https://example.com/questflow}{Company Name}]
-
-\AddProject
-    {CookieVision (The Biscuit Oracle)}
-    {Jan 2022}
-    {May 2022}
-    {\item[--] Developed a vision system capable of identifying cookies, cupcakes, and suspicious snack impostors.
-    \item[--] Added explanation features so the oracle could defend its snack-related opinions.
-    \item[--] Optimized predictions so hungry villagers received answers before snack emergencies occurred.}
+    [Dragon Training, Chaos Control, Quest Routing]
 
 % --------------------------------------------------------------------------------
 % Education entries:
@@ -294,6 +326,23 @@
     {Jun 2019}
 
 % --------------------------------------------------------------------------------
+% Certification entries:
+% Args:
+% 1) Certification name
+% 2) Host organization
+% 3) Date earned
+% 4) Skills acquired [] {optional}
+% --------------------------------------------------------------------------------
+\AddCertification
+    {Certified Spreadsheet Dragon Slayer}
+    {Guild of Office Wizards}
+    {Mar 2025}
+
+\AddCertification
+    {Advanced Bug Whispering}
+    {Institute of Questionable Software}
+    {Oct 2024}
+% --------------------------------------------------------------------------------
 % LAYOUT - REORDER PRINT COMMANDS TO CHANGE THE ORDER OF SECTIONS ON RESUME
 % --------------------------------------------------------------------------------
 \begin{document}
@@ -303,5 +352,6 @@
 \PrintExperiences
 \PrintProjects
 \PrintEducation
+\PrintCertifications
 \end{document}
 
