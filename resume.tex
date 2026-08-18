@@ -1,7 +1,7 @@
 % --------------------------------------------------------------------------------
 % RESUMETEX
 % AUTHOR: HARSH KASODARIYA
-% LICENSE: MIT              
+% LICENSE: MIT
 % --------------------------------------------------------------------------------
 \documentclass[11pt, letterpaper]{article}
 % COMMANDS WITH FLEXIBLE ARGUMENTS
@@ -19,7 +19,7 @@
 % CUSTOMIZE TABULAR
 \usepackage{tabularx}
 % MACHINE-READABLE PDF
-\input{glyphtounicode} 
+\input{glyphtounicode}
 \pdfgentounicode=1
 % NO PAGE NUMBERS
 \pagestyle{empty}
@@ -103,16 +103,21 @@
 % 6 END DATE
 % 7 COURSE WORK [optional]
 \newcommand{\EducationList}{}
-\NewDocumentCommand{\AddEducation}{s m m m m m o}{
-    \g@addto@macro\EducationList{
-        \IfBooleanT{#1}{\newpage}
-        \textbf{#2}, #3, #4 \hfill \textbf{#5 - #6}\\
+\newif\ifHasEducation
+\HasEducationfalse
+\NewDocumentCommand{\AddEducation}{s m m m m m o}{%
+    \g@addto@macro\EducationList{%
+        \IfBooleanT{#1}{\newpage}%
+        \ifHasEducation
+            \\
+        \fi
+        \HasEducationtrue
+        \textbf{#2}, #3, #4 \hfill \textbf{#5 - #6}%
         \IfNoValueTF{#7}{}{
-            --\hspace{0.5em}\textit{\textbf{Course Work} | #7}\\
+            \\--\hspace{0.5em}\textit{\textbf{Course Work} | #7}
         }
     }
 }
-
 
 % ADD CERTIFICATION TO THE LIST
 % ARGS:
@@ -121,10 +126,16 @@
 % 3 HOST ORGANISATION
 % 4 DATE EARNED
 \newcommand{\CertificationList}{}
+\newif\ifHasCertification
+\HasCertificationfalse
 \NewDocumentCommand{\AddCertification}{s m m m}{
-    \g@addto@macro\CertificationList{
-        \IfBooleanT{#1}{\newpage}
-        \textbf{#2} | \textit{#3} \hfill \textbf{#4}\\
+    \g@addto@macro\CertificationList{%
+        \IfBooleanT{#1}{\newpage}%
+        \ifHasCertification
+            \\
+        \fi
+        \HasCertificationtrue
+        \textbf{#2} | \textit{#3} \hfill \textbf{#4}%
     }
 }
 \makeatother
@@ -185,18 +196,14 @@
 % PRINT EDUCATION
 \NewDocumentCommand{\PrintEducation}{}{
     \begin{rSection}{Education}
-        \begin{tabular}{@{}p{\textwidth}@{}}
-            \EducationList
-        \end{tabular}
+        \EducationList
     \end{rSection}
 }
 
 % PRINT CERTIFICATIONS
 \NewDocumentCommand{\PrintCertifications}{} {
     \begin{rSection}{Certifications}
-        \begin{tabular}{@{}p{\textwidth}@{}}
-            \CertificationList
-        \end{tabular}
+        \CertificationList
     \end{rSection}
 }
 
@@ -214,7 +221,7 @@
 }
 
 % --------------------------------------------------------------------------------
-% Skill entries: 
+% Skill entries:
 % Args:
 % 1) Skill Category
 % 2) Skills (comma separated list of skills: skill1, skill2, skill3 ... )
@@ -230,7 +237,7 @@
     {Database Gardening, Cloud Cloudlets, Bug Hunting, Spreadsheet Sorcery}
 
 % --------------------------------------------------------------------------------
-% Experience entries:
+% Experience entries: (use \AddExperience* to force entry to new page)
 % Args:
 % 1) Job position
 % 2) Company name
@@ -270,7 +277,7 @@
     \item[--] Created internal tools that reduced paperwork dragons and improved team productivity across the department.}
 
 % --------------------------------------------------------------------------------
-% Project entries:
+% Project entries: (use \AddProject* to force entry to new page)
 % Args:
 % 1) Project name
 % 2) Start date
@@ -297,7 +304,7 @@
     [Dragon Training, Chaos Control, Quest Routing]
 
 % --------------------------------------------------------------------------------
-% Education entries:
+% Education entries: (use \AddEducation* to force entry to new page)
 % Args:
 % 1) Degree
 % 2) University/School
@@ -321,18 +328,16 @@
     {Jun 2019}
 
 % --------------------------------------------------------------------------------
-% Certification entries:
+% Certification entries: (use \AddCertification* to force entry to new page)
 % Args:
 % 1) Certification name
 % 2) Host organization
 % 3) Date earned
-% 4) Skills acquired [] {optional}
 % --------------------------------------------------------------------------------
 \AddCertification
     {Certified Spreadsheet Dragon Slayer}
     {Guild of Office Wizards}
     {Mar 2025}
-
 \AddCertification
     {Advanced Bug Whispering}
     {Institute of Questionable Software}
@@ -349,4 +354,3 @@
 \PrintEducation
 \PrintCertifications
 \end{document}
-
