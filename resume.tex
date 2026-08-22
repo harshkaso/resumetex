@@ -39,17 +39,26 @@
     \newcommand{\ProfessionalSummary}{#1}
 }
 
-\makeatletter
+\ExplSyntaxOn
+
+\seq_new:N \g_resumetex_skills_seq
+\seq_new:N \g_resumetex_experiences_seq
+\seq_new:N \g_resumetex_projects_seq
+\seq_new:N \g_resumetex_education_seq
+\seq_new:N \g_resumetex_certifications_seq
+
 % ADD SKILL TO THE LIST
 % ARGS:
 % 1 SKILL CATEGORY
 % 2 SKILLS {comma separated list of skills: skill1, skill2, skill3 ... }
-\newcommand{\SkillList}{}
 \NewDocumentCommand{\AddSkill}{ m m }{
-    \g@addto@macro\SkillList{
-        #1 & #2\\
-    }
+    \seq_gput_right:Nn
+        \g_resumetex_skills_seq
+        {
+            \textbf{#1} & #2
+        }
 }
+
 % ADD EXPERIENCE TO THE LIST
 % ARGS:
 % 1 PAGE BREAK [optional]
@@ -59,16 +68,16 @@
 % 5 START DATE
 % 6 END DATE
 % 7 ACCOMPLISHMENTS
-\newcommand{\ExperienceList}{\empty}
-\NewDocumentCommand{\AddExperience}{s m m m m m +m}{
-    \g@addto@macro\ExperienceList{
-        \IfBooleanT{#1}{\newpage}
-        \textbf{#2}, #3, #4 \hfill \textbf{#5 - #6}\\
-        \vspace{-7mm}
-        \begin{itemize}[leftmargin=*,noitemsep,nolistsep]
-            #7
-        \end{itemize}
-    }
+\NewDocumentCommand{\AddExperience}{s m m m m m m}{
+    \seq_gput_right:Nn
+        \g_resumetex_experiences_seq
+        {
+            \IfBooleanT{#1}{\newpage}
+            \textbf{#2},~#3,~#4 \hfill \textbf{#5~-~#6}
+            \begin{itemize}[leftmargin=*,noitemsep,nolistsep]
+                #7
+            \end{itemize}
+        }
 }
 
 
@@ -80,16 +89,16 @@
 % 4 END DATE
 % 5 ACCOMPLISHMENTS
 % 6 ADDITIONAL INFO [optional]
-\newcommand{\ProjectList}{}
 \NewDocumentCommand{\AddProject}{s m m m +m o}{
-    \g@addto@macro\ProjectList{
-        \IfBooleanT{#1}{\newpage}
-        \textbf{#2}\IfNoValueTF{#6}{}{ | #6} \hfill \textbf{#3 - #4}\\
-        \vspace{-7mm}
-        \begin{itemize}[leftmargin=*,noitemsep,nolistsep]
-            #5
-        \end{itemize}
-    }
+    \seq_gput_right:Nn
+        \g_resumetex_projects_seq
+        {
+            \IfBooleanT{#1}{\newpage}
+            \textbf{#2}\IfNoValueTF{#6}{}{~---~#6} \hfill \textbf{#3~-~#4}
+            \begin{itemize}[leftmargin=*,noitemsep,nolistsep]
+                #5
+            \end{itemize}
+        }
 }
 
 
@@ -102,21 +111,16 @@
 % 5 START DATE
 % 6 END DATE
 % 7 COURSE WORK [optional]
-\newcommand{\EducationList}{}
-\newif\ifHasEducation
-\HasEducationfalse
-\NewDocumentCommand{\AddEducation}{s m m m m m o}{%
-    \g@addto@macro\EducationList{%
-        \IfBooleanT{#1}{\newpage}%
-        \ifHasEducation
-            \\
-        \fi
-        \HasEducationtrue
-        \textbf{#2}, #3, #4 \hfill \textbf{#5 - #6}%
-        \IfNoValueTF{#7}{}{
-            \\--\hspace{0.5em}\textit{\textbf{Course Work} | #7}
+\NewDocumentCommand{\AddEducation}{s m m m m m o}{
+    \seq_gput_right:Nn
+        \g_resumetex_education_seq
+        {
+            \textbf{#2},~#3,~#4 \hfill \textbf{#5~-~#6}
+            \IfNoValueTF{#7}{}{
+                \\
+                --\hspace{0.5em}\textit{\textbf{Course Work}~---~#7}
+            }
         }
-    }
 }
 
 % ADD CERTIFICATION TO THE LIST
@@ -129,42 +133,38 @@
 \newif\ifHasCertification
 \HasCertificationfalse
 \NewDocumentCommand{\AddCertification}{s m m m}{
-    \g@addto@macro\CertificationList{%
-        \IfBooleanT{#1}{\newpage}%
-        \ifHasCertification
-            \\
-        \fi
-        \HasCertificationtrue
-        \textbf{#2} | \textit{#3} \hfill \textbf{#4}%
-    }
+    \seq_gput_right:Nn \g_resumetex_certifications_seq
+       {
+        \IfBooleanT{#1}{\newpage}
+        \textbf{#2}~---~\textit{#3} \hfill \textbf{#4}
+       }
 }
-\makeatother
 
 % DEFINE RESUME SECTION
-\newenvironment{rSection}[1]{
-  \textsc{\large #1} % Section title in small caps
-  \medskip
+
+\newenvironment{rSection}[1]{%
+  \par\noindent{\large\scshape #1\par\medskip}
   \hrule
-  \begin{list}{}{ % List for each individual item in the section
-    \setlength{\leftmargin}{0em} % Margin within the section
+  \begin{list}{}{%
+    \setlength{\leftmargin}{0pt}%
+    \setlength{\itemsep}{0pt}%
+    \setlength{\parsep}{0pt}%
   }
   \item[]
-}{
-  \end{list}
-}
+}{\end{list}}
 % --------------------------------------------------------------------------------
 % PRINT COMMANDS
 % --------------------------------------------------------------------------------
 % PRINT CONTACT INFO
-\NewDocumentCommand{\PrintContact}{}{
+\NewDocumentCommand{\PrintContact}{}{%
     \def\DiamondSep{\quad$\diamond$\quad}
     \centerline{\huge\textbf{\MakeUppercase{\ContactName}}}
-    \vspace{1mm}
+    \vspace{1pt}
     \centerline{\ContactEmail\DiamondSep\ContactPhone\DiamondSep\ContactAddress}
 }
 
 % PRINT PROFESSIONAL SUMMARY
-\NewDocumentCommand{\PrintSummary}{}{
+\NewDocumentCommand{\PrintSummary}{}{%
     \begin{rSection}{Summary}
         \ProfessionalSummary
     \end{rSection}
@@ -173,39 +173,41 @@
 % PRINT SKILLS
 \NewDocumentCommand{\PrintSkills}{}{
     \begin{rSection}{Skills}
-    \begin{tabular}{ @{} >{\bfseries}l @{\hspace{3ex}} l }
-        \SkillList
-    \end{tabular}
+        \begin{tabular}{ @{} >{\bfseries}l @{\hspace{3ex}} l }
+            \seq_use:Nn \g_resumetex_skills_seq {\\}
+        \end{tabular}
     \end{rSection}
 }
 
 % PRINT EXPERIENCES
 \NewDocumentCommand{\PrintExperiences}{}{
     \begin{rSection}{Experience}
-        \ExperienceList
+        \seq_use:Nn \g_resumetex_experiences_seq {\par\vspace{4pt}}
     \end{rSection}
 }
 
 % PRINT PROJECTS
 \NewDocumentCommand{\PrintProjects}{}{
     \begin{rSection}{Projects}
-        \ProjectList
+        \seq_use:Nn \g_resumetex_projects_seq {\par\vspace{4pt}}
     \end{rSection}
 }
 
 % PRINT EDUCATION
 \NewDocumentCommand{\PrintEducation}{}{
     \begin{rSection}{Education}
-        \EducationList
+        \seq_use:Nn \g_resumetex_education_seq {\par\vspace{4pt}}
     \end{rSection}
 }
 
 % PRINT CERTIFICATIONS
 \NewDocumentCommand{\PrintCertifications}{} {
     \begin{rSection}{Certifications}
-        \CertificationList
+        \seq_use:Nn \g_resumetex_certifications_seq {\par\vspace{4pt}}
     \end{rSection}
 }
+\ExplSyntaxOff
+
 
 % --------------------------------------------------------------------------------
 % DATA - THIS IS WHERE YOU PROVIDE ALL YOUR DATA
